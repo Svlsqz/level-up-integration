@@ -21,6 +21,8 @@ return new class extends Migration
             $table->boolean('is_visible')->default(true);
             $table->rememberToken();
             $table->timestamps();
+            $table->timestamp('email_verified_at')->nullable();
+
 
         });
 
