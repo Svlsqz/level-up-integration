@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasXPLogging;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -9,8 +10,14 @@ use LevelUp\Experience\Concerns\GiveExperience;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, GiveExperience;
+    use HasFactory, Notifiable;
+
+    use HasXPLogging, GiveExperience {
+        GiveExperience::addPoints as addPointsBase;
+        GiveExperience::deductPoints as deductPointsBase;
+        HasXPLogging::addPoints insteadof GiveExperience;
+        HasXPLogging::deductPoints insteadof GiveExperience;
+    }
 
     protected $fillable = [
         'name',
@@ -37,6 +44,24 @@ class User extends Authenticatable
 
     public function entity()
     {
-        return $this->belongsTo(\App\Models\Entity::class);
+        return $this->belongsTo(Entity::class);
+    }
+
+    public function xpLogs()
+    {
+        return $this->hasMany(XPLog::class);
+    }
+
+    public function totalXPLogged(): int
+    {
+        return $this->xpLogs()->sum('points');
+    }
+    public function rewards()
+    {
+        return $this->belongsToMany(Reward::class)->withTimestamps();
+    }
+    public function giveReward(Reward $reward): void
+    {
+        $this->rewards()->syncWithoutDetaching($reward->id);
     }
 }
