@@ -17,9 +17,7 @@ return new class extends Migration
             $table->foreignId('reward_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
-
     }
-
     /**
      * Reverse the migrations.
      */
