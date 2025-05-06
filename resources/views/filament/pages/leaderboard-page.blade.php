@@ -12,7 +12,7 @@
 
         <x-filament::button
             wire:click="$set('tab', 'students')"
-            :color="$tab === 'students' ? 'warning' : 'gray'"
+            :color="$tab === 'student' ? 'warning' : 'gray'"
             size="sm"
         >
             Estudiantes
@@ -50,7 +50,7 @@
                 </table>
             </div>
         </div>
-    @elseif ($tab === 'students')
+    @elseif ($tab === 'student')
         <div class="w-full mb-8">
             <div class="overflow-auto shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
                 <table class="w-full min-w-[600px] divide-y divide-gray-200 dark:divide-gray-700 outline-none focus:outline-none">

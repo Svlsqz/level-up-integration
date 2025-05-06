@@ -13,6 +13,8 @@ class Challenge extends Model
         'xp_reward',
         'status',
         'deadline',
+        'attachment_path',
+        'reward_description',
     ];
 
     public function entity()
