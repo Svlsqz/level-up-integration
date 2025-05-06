@@ -42,6 +42,14 @@ class User extends Authenticatable
         ];
     }
 
+    public function challengeTeams()
+    {
+        return $this->belongsToMany(ChallengeTeam::class, 'challenge_team_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+
     public function entity()
     {
         return $this->belongsTo(Entity::class);
@@ -65,45 +73,5 @@ class User extends Authenticatable
     public function giveReward(Reward $reward): void
     {
         $this->rewards()->syncWithoutDetaching($reward->id);
-    }
-
-    public function teams()
-    {
-        return $this->belongsToMany(Team::class, 'student_team')
-            ->withPivot('role', 'total_xp')
-            ->withTimestamps();
-    }
-
-    public function challengeTeams()
-    {
-        return $this->belongsToMany(\App\Models\ChallengeTeam::class, 'challenge_team_user')
-            ->withPivot('role')
-            ->withTimestamps();
-    }
-
-    public function level(): int
-    {
-        return (int) floor($this->totalXPLogged() / 100);
-    }
-
-    public function xpToNextLevel(): int
-    {
-        return $this->xpForNextLevel() - $this->totalXPLogged();
-    }
-
-    public function xpForCurrentLevel(): int
-    {
-        return $this->level() * 100;
-    }
-
-    public function xpForNextLevel(): int
-    {
-        return ($this->level() + 1) * 100;
-    }
-
-    public function completedActivitiesCount(): int
-    {
-        // Puedes personalizar esto más adelante
-        return $this->xpLogs()->count();
     }
 }
