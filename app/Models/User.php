@@ -74,4 +74,30 @@ class User extends Authenticatable
     {
         $this->rewards()->syncWithoutDetaching($reward->id);
     }
+
+    public function level(): int
+    {
+        return (int) floor($this->totalXPLogged() / 100);
+    }
+
+    public function xpToNextLevel(): int
+    {
+        return $this->xpForNextLevel() - $this->totalXPLogged();
+    }
+
+    public function xpForCurrentLevel(): int
+    {
+        return $this->level() * 100;
+    }
+
+    public function xpForNextLevel(): int
+    {
+        return ($this->level() + 1) * 100;
+    }
+
+    public function completedActivitiesCount(): int
+    {
+        // Puedes personalizar esto más adelante
+        return $this->xpLogs()->count();
+    }
 }
